@@ -40,7 +40,7 @@ products.forEach((product) => {
 
             <div class="product-spacer"></div>
 
-            <div class="added-to-cart">
+            <div class="added-to-cart js-added-to-cart-${product.id}">
                 <img src="images/icons/checkmark.png">
                 Added
             </div>
@@ -60,14 +60,19 @@ document.querySelector('.js-products-grid')
 
  document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
+
+        let addedMessageTimeoutId;
+
         button.addEventListener('click', () => {
-            const productId = button.dataset.productId ;
+            //used the destructuring method to combine the variable
+            //and the other value together
+            //onst productId = button.dataset.productId;
+            const {productId} = button.dataset ;
             /* ".dataset" finds out all the data attributes
              attached to the html element */
             
             const quantitySelector = document.querySelector(
-                `.js-quantity-selector-${productId}`
-              );
+                `.js-quantity-selector-${productId}`);
             
             const quantity = Number(quantitySelector.value);
 
@@ -87,7 +92,28 @@ document.querySelector('.js-products-grid')
                     quantity: quantity
                 });
             }
-            
+
+            const addedMessage = document.querySelector(
+                `.js-added-to-cart-${productId}`);
+
+            addedMessage.classList.add('added-to-cart-visible');
+
+            setTimeout(() => {
+                // Check if a previous timeoutId exists. If it does,
+                // we will stop it.
+                if (addedMessageTimeoutId) {
+                  clearTimeout(addedMessageTimeoutId);
+                }
+          
+                const timeoutId = setTimeout(() => {
+                  addedMessage.classList.remove('added-to-cart-visible');
+                }, 2000);
+          
+                // Save the timeoutId so we can stop it later.
+                addedMessageTimeoutId = timeoutId;
+
+            });
+
             let cartQuantity = 0;
 
             cart.forEach((cartItem) => {
@@ -96,7 +122,7 @@ document.querySelector('.js-products-grid')
         
             document.querySelector('.js-cart-quantity')
                 .innerHTML = cartQuantity;
-                // console.log(cartQuantity);
+           // console.log(cartQuantity);
            // console.log(cart);
         });
     });
