@@ -1,4 +1,4 @@
-import { cart, addToCart } from '../data/cart.js';
+import { cart, addToCart, calculateCartQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -62,17 +62,19 @@ products.forEach((product) => {
 document.querySelector('.js-products-grid')
  .innerHTML = productsHTML;
 
-function updateCartQuantity () {
-    let cartQuantity = 0;
-
-    cart.forEach((cartItem) => {
-        cartQuantity += cartItem.quantity;
-    });
-
+function updateCartQuantity() {
+    const cartQuantity = calculateCartQuantity();
+  
     document.querySelector('.js-cart-quantity')
         .innerHTML = cartQuantity;
-   // console.log(cartQuantity);
-}
+        // console.log(cartQuantity);
+  }    
+
+/*this function is being called here again because 
+in real time the cart should get updated too,not only when
+clicking the add-to-cart button*/
+updateCartQuantity();
+
 
  document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
@@ -115,7 +117,7 @@ function updateCartQuantity () {
 
             });
 
-            updateCartQuantity ()
+            updateCartQuantity()
 
            // console.log(cart);
         });
